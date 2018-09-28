@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Minesweeper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <h1 onclick="location.reload()">1 Dimension Minesweeper</h1>
+  <form id="admin" onsubmit="startGame(event)">
+    <div>
+      <label for="jmlBox">Jumlah Box</label>
+      <input type="number" name="jmlBox" required value="9">
+      <span id="jmlBoxError" class="danger"></span>
+    </div>
+    <div>
+      <label for="jmlBomb">Jumlah Bomb</label>
+      <input type="number" name="jmlBomb" required value="3">
+      <span id="jmlBombError" class="danger"></span>
+    </div>
+    <button>Submit</button>
+  </form>
+  <span id="info"></span>
+  <section id="app"></section>
+</body>
+</html>

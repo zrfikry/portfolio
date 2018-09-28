@@ -1,0 +1,43 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.wrapper {
+  display: flex;
+  max-width: 100vw;
+}
+
+.wrapper.week-list {
+  flex-direction: column;
+  border: 1px solid #ddd;
+  width: fit-content;
+}
+
+.box {
+  display: inline-block;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  min-width: 4vw;
+  max-width: 4vw;
+  text-align: center;
+}
+
+.box.sunday {
+  background: rgb(255,0,0);
+  color: #fff;
+}
+
+.box.off {
+  background: #ddd;
+  color: #000;
+}
+
+.days-header .box {
+  border-color: transparent;
+}
+
+@media screen and (max-width: 768px) {
+  .box {
+    font-size: .5rem;
+  }
+}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Battleship</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <section class="ship-setter">
+    <h1>Battleship</h1>
+  </section>
+  <section class="ship-setter">
+    <button onclick="startGame()">Start Game</button>
+    <button onclick="showCheat()">Toggle Cheat</button>
+    <div>
+      <label for="">Ammo</label>
+      <input type="number" name="ammo" id="ammo" min="1" value="1" onchange="changeAmmo()">
+    </div>
+  </section>
+  <header class="ship-setter">
+    <h2 id="turn"></h2>
+  </header>
+  <section id="game" class="section">
+    <section id="areaP1" class="board">
+      <section>
+        <h3>Player 1 Board</h3>
+        <div id="setterP1">
+          <select id="p1SelectShip">
+            <option value="" disabled selected>- Select Ship -</option>
+          </select>
+          <select id="p1ShipOrientation" value="h">
+            <option value="h">Horizontal</option>
+            <option value="v">Vertical</option>
+          </select>
+          <button onclick="setShip('p1')">Set Ship</button>
+        </div>
+      </section>
+      <div id="board1"></div>
+    </section>
+    <section id="areaP2" class="board">
+      <section>
+        <h3>Player 2 Board</h3>
+        <div id="setterP2">
+          <select id="p2SelectShip">
+            <option value="" disabled selected>- Select Ship -</option>
+          </select>
+          <select id="p2ShipOrientation" value="h">
+            <option value="h">Horizontal</option>
+            <option value="v">Vertical</option>
+          </select>
+          <button onclick="setShip('p2')">Set Ship</button>
+        </div>
+      </section>
+      <div id="board2"></div>
+    </section>
+  </section>
+
+  <section id="cheat" class="section">
+    <section id="cheatArea2" class="cheat-area">
+      <section class="ship-setter">
+        <h3>Cheat</h3>
+      </section>
+      <div id="cheatBoard2"></div>
+    </section>
+    <section id="cheatArea1" class="cheat-area">
+      <section class="ship-setter">
+        <h3>Cheat</h3>
+      </section>
+      <div id="cheatBoard1"></div>
+    </section>
+  </section>
+</body>
+</html>

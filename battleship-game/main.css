@@ -1,0 +1,103 @@
+.board {
+  display: inline-flex;
+  flex-flow: wrap;
+  width: 550px;
+  height: auto;
+  margin: 25px;
+  border: 1px solid #ccc;
+  padding: 15px;
+}
+
+.section {
+  display: inline-block;
+}
+
+.row {
+  display: flex;
+}
+
+.box#box0-0 {
+  opacity: 0;
+}
+
+.box {
+  width: 50px;
+  height: 50px;
+  display: inline-flex;
+  border: 1px solid #ccc;
+  text-transform: capitalize;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+}
+
+.box.coordinate-numbering {
+  border: none;
+  background: none;
+}
+
+.ship-setter {
+  margin: 0 25px;
+}
+
+.box.ship-c {
+  background: #1a237e;
+  border-color: #1a237e;
+  color: #fff;
+}
+
+.box.ship-b {
+  background: #283593;
+  border-color: #283593;
+  color: #fff;
+}
+
+.box.ship-d {
+  background: #303f9f;
+  border-color: #303f9f;
+  color: #fff;
+}
+
+.box.ship-s {
+  background: #3949ab;
+  border-color: #3949ab;
+  color: #fff;
+}
+
+.box.ship-p {
+  background: #3f51b5;
+  border-color: #3f51b5;
+  color: #fff;
+}
+
+.box.hide {
+  background: lightblue;
+  border-color: #ccc;
+  color: transparent;
+}
+
+.box.hide span {
+  display: none;
+}
+
+.box span.status {
+  top: 0;
+  line-height: 15px;
+  padding: 1px 5px;
+  display: none;
+}
+
+.box span.status.hit {
+  background: rgba(255, 0, 0, .75);
+  display: block;
+}
+
+.box span.status.miss {
+  background: rgba(253, 253, 253, 0.75);
+  display: block;
+}
+
+.cheat-area {
+  display: none;
+  opacity: .87;
+}

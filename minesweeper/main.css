@@ -1,0 +1,44 @@
+body {
+  font-family: 'Roboto', sans-serif
+}
+
+form label {
+  display: block;
+  padding: .5rem 0;
+}
+
+form > button {
+  margin-top: .5rem;
+}
+
+.box {
+  width: 2rem;
+  height: 2rem;
+  text-align: center;
+  font-size: 1rem;
+}
+
+#app {
+  margin-top: 1rem;
+  display: flex;
+  width: fit-content;
+}
+
+#admin {
+  margin-bottom: 1rem;
+}
+
+#info {
+  padding: .25rem;
+  margin-top: 1rem;
+}
+
+.success {
+  background: green;
+  color: #fff;
+}
+
+.danger {
+  background: red;
+  color: #fff;
+}
