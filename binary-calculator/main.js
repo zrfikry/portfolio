@@ -90,8 +90,10 @@ calcBtn.addEventListener('click', () => {
   let result = []
   const type = typeSelect.value
   const operator = operatorSelect.value
-  const n1 = n1Input.value
-  const n2 = n2Input.value
+  const n1 = String(n1Input.value).replace(' ', '')
+  const n2 = String(n2Input.value).replace(' ', '')
+  n1Input.value = n1
+  n2Input.value = n2
   let converter = new BitConvert()
   converter.setOperator(operator)
 
@@ -119,9 +121,9 @@ calcBtn.addEventListener('click', () => {
   }
 
   result = [
-    `Decimal: ${resultDecimal}`,
-    `Binary: ${resultBinary !== '' ? resultBinary : 0}`,
-    `Hex: ${resultHexa !== '' ? resultHexa : 0}`
+    `${String('Decimal').padEnd(10, ' ')} ${resultDecimal}`,
+    `${String('Binary').padEnd(10, ' ')} ${resultBinary !== '' ? resultBinary : 0}`,
+    `${String('Hex').padEnd(10, ' ')} ${resultHexa !== '' ? resultHexa : 0}`
   ]
 
   resultBox.innerText = result.join('\n')
