@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Binary Calculator & Converter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <section>
+    <select name="selectType" id="selectType">
+      <option value="decimal">Decimal</option>
+      <option value="binary">Binary</option>
+      <option value="hexadecimal">Hexadecimal</option>
+    </select>
+  
+    <input type="text" id="number1" placeholder="Value 1">
+  
+    <select name="selectOperator" id="selectOperator">
+      <option value="+">+</option>
+      <option value="-">-</option>
+      <option value="/">/</option>
+      <option value="x">x</option>
+    </select>
+  
+    <input type="text" id="number2" placeholder="Value 2">
+  
+    <button id="calculate">Calculate</button>
+  </section>
+
+  <section id="result"></section>
+</body>
+</html>
