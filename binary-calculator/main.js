@@ -10,33 +10,16 @@ class BitConvert {
   calcDecimal (number1, number2) {
     number1 = Number(number1)
     number2 = Number(number2)
-    let result = 0
-    switch (this.operator) {
-      case '+':
-          result = number1 + number2
-        break
-      case '-':
-          result = number1 - number2
-        break
-      case '/':
-          result = number1 / number2
-          result = result.toFixed(2)
-        break
-      case 'x':
-          result = number1 * number2
-        break
-      default:
-          result = 0
-        break
-    }
+    let result = eval(`${number1} ${this.operator} ${number2}`)
+    result = Number.isInteger(result) ? result : result.toFixed(2)
     return result
   }
 
   binaryToDecimal (value) {
     let result = 0
-    let binaries = [...value.split('').map(( number ) => Number(number)) ]
-    binaries.reverse().map(( number, i ) => {
-      result += number * Math.pow(2, i)
+    let binary = [...value.split('').map(( value ) => Number(value)) ]
+    binary.reverse().map(( value, i ) => {
+      result += value * Math.pow(2, i)
     })
     return result
   }
@@ -44,9 +27,9 @@ class BitConvert {
   hexadecimalToDecimal (value) {
     let result = 0
     const hexList = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' ]
-    let binaries = [...value.split('').map(( n ) => hexList.indexOf(n)) ]
-    binaries.reverse().map(( number, i ) => {
-      result += number * Math.pow(16, i)
+    let hexa = [...value.split('').map(( value ) => hexList.indexOf(value)) ]
+    hexa.reverse().map(( value, i ) => {
+      result += value * Math.pow(16, i)
     })
     return result
   }
@@ -67,7 +50,7 @@ class BitConvert {
 
   decimalToHexa (value) {
     value = Math.floor(value)
-    const hexList = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F' ]
+    const hexList = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' ]
     let result = []
     let bit = 0
     
@@ -134,7 +117,7 @@ calcBtn.addEventListener('click', () => {
         resultHexa = converter.decimalToHexa(resultDecimal)
       break
   }
-  
+
   result = [
     `Decimal: ${resultDecimal}`,
     `Binary: ${resultBinary !== '' ? resultBinary : 0}`,
