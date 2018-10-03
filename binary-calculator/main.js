@@ -1,5 +1,9 @@
 class BitConvert {
-  constructor (operator) {
+  constructor () {
+    this.operator = '+'
+  }
+
+  setOperator (operator) {
     this.operator = operator
   }
 
@@ -16,6 +20,7 @@ class BitConvert {
         break
       case '/':
           result = number1 / number2
+          result = result.toFixed(2)
         break
       case 'x':
           result = number1 * number2
@@ -104,7 +109,8 @@ calcBtn.addEventListener('click', () => {
   const operator = operatorSelect.value
   const n1 = n1Input.value
   const n2 = n2Input.value
-  let converter = new BitConvert(operator)
+  let converter = new BitConvert()
+  converter.setOperator(operator)
 
   let resultBinary = null
   let resultDecimal = null
@@ -128,6 +134,12 @@ calcBtn.addEventListener('click', () => {
         resultHexa = converter.decimalToHexa(resultDecimal)
       break
   }
-  result = [`Decimal: ${resultDecimal || '-'}`, `Binary: ${resultBinary || '-'}`, `Hex: ${resultHexa || '-'}`]
+  
+  result = [
+    `Decimal: ${resultDecimal}`,
+    `Binary: ${resultBinary !== '' ? resultBinary : 0}`,
+    `Hex: ${resultHexa !== '' ? resultHexa : 0}`
+  ]
+
   resultBox.innerText = result.join('\n')
 })
