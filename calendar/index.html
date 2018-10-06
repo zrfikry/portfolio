@@ -6,23 +6,35 @@
   <title>Calendar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+  <script src="Hijri.js"></script>
   <script src="main.js" defer></script>
 </head>
 <body>
-  <form id="dateNav" onsubmit="changeDate(event)">
-    <select name="month" id="monthSelect"></select>
-    <input type="number" id="yearInput" min="1970" value="2018">
-    <button>Submit</button>
-  </form>
-  <section id="calendarHeader" class="wrapper days-header">
+  <nav id="mainNav">
+    <button id="prevBtn" onclick="navigateMonth(-1)">Prev</button>
+    <div>
+      <select name="selectMonth" id="selectMonth"></select>
+      <input type="number" name="inputYear" id="inputYear" min="1970">
+    </div>
+    <button id="nextBtn" onclick="navigateMonth(1)">Next</button>
+  </nav>
+
+  <header>
+    <h1 id="gregHeader"></h1>
+    <p id="hijriHeader"></p>
+  </header>
+
+  <section class="wrapper label-days">
+    <div class="box sunday">Minggu</div>
     <div class="box">Senin</div>
     <div class="box">Selasa</div>
     <div class="box">Rabu</div>
     <div class="box">Kamis</div>
-    <div class="box">Jum'at</div>
+    <div class="box friday">Jum'at</div>
     <div class="box">Sabtu</div>
-    <div class="box">Minggu</div>
   </section>
-  <section id="calendarBody" class="wrapper week-list"></section>
+  <section id="calendarBody" class="wrapper">
+
+  </section>
 </body>
 </html>

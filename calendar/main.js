@@ -1,101 +1,161 @@
-document.body.onload = init
-
+document.body.onload = renderDateList
 let dateList = []
+let currentDate = new Date
 
-const getDaysInMonth = function ( month, year) {
-  return new Date(year, month + 1, 0).getDate()
+const arabNumber = '٠١٢٣٤٥٦٧٨٩'.split('')
+const monthName = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'July', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+// const hijriMonthName = ['Muharram', 'Safar', 'Rabi\' al-awwal', 'Rabi\' al-thani', 'Jumada al-awwal', 'Jumada al-thani', 'Rajab', 'Sha\'ban', 'Ramadan', 'Shawwal', 'Dhu al-Qi\'dah', 'Dhu al-Hijjah']
+const hijriMonthName = ['مُحَرَّم', 'صَفَر', 'رَبِيع ٱلْأَوَّل', 'رَبِيع ٱلْآخِر', 'جُمَادَىٰ ٱلْأُولَىٰ', 'جُمَادَىٰ ٱلْآخِرَة', 'رَجَب', 'شَعْبَان', 'رَمَضَان', 'شَوَّال', 'ذُو ٱلْقَعْدَة', 'ذُو ٱلْحِجَّة']
+
+const calendarBody = document.getElementById('calendarBody')
+const selectMonth = document.getElementById('selectMonth')
+const inputYear = document.getElementById('inputYear')
+const gregHeader = document.getElementById('gregHeader')
+const hijriHeader = document.getElementById('hijriHeader')
+const prevBtn = document.getElementById('prevBtn')
+const nextBtn = document.getElementById('nextBtn')
+
+const navigateMonth = function ( to ) {
+  currentDate = new Date( currentDate.getFullYear(), currentDate.getMonth() + (to))
+  renderDateList()
 }
 
-const monthSelect = document.querySelector('#monthSelect')
-const calendarBody = document.querySelector('#calendarBody')
+selectMonth.addEventListener('change', setDate)
+inputYear.addEventListener('change', setDate)
 
-function init () {
-  const monthName = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'July', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
-  for (let i = 0; i < 12; i++) {
-    let newOpt = document.createElement('option')
-    newOpt.value = i
-    newOpt.innerText = monthName[ i ]
-    if (new Date().getMonth() === i) {
-      newOpt.selected = true
-    }
-    monthSelect.appendChild( newOpt )
-  }
-
-  render(new Date())
+function setDate () {
+  currentDate = new Date( Number(inputYear.value), Number(selectMonth.value) )
+  renderDateList()
 }
 
-const changeDate = function (event) {
-  event.preventDefault()
-  const selectedMonth = Number(document.querySelector('#monthSelect').value)
-  const yearInput = Number(document.querySelector('#yearInput').value)
+function renderDateList () {
+  calendarBody.innerHTML = ""
   dateList = []
-  render(new Date(yearInput, selectedMonth))
-}
+  const date = currentDate
 
-const render = function (dt = null) {
-  calendarBody.innerHTML = ''
+  monthName.map(( m, i ) => {
+    let selectOption = document.createElement('option')
+    selectOption.value = i
+    selectOption.innerText = m
+    if (i === date.getMonth()) {
+      selectOption.selected = true
+    }
+    selectMonth.appendChild(selectOption)
+  })
 
-  let daysInMonth = getDaysInMonth(dt.getMonth(), dt.getFullYear())
-  for (let week = 0; week < Math.ceil(daysInMonth / 6 ); week++) {
-    dateList.push([])
-  }
+  inputYear.value = date.getFullYear()
 
-  let week = 0
-  for (let i = 0; i < daysInMonth; i++) {
-    let newDate = new Date(dt.getFullYear(), dt.getMonth(), i + 1)
-    if (i === 0) {
-      for (let emptyDate = newDate.getDay() - 2; emptyDate >= 0; emptyDate--) {
-        let nextM = dt.getMonth() === 11 ? 0 : dt.getMonth() + 1
-        let prevMonth = getDaysInMonth(nextM, dt.getFullYear())
-        dateList[ week ].push(new Date(dt.getFullYear(), dt.getMonth() - 1, prevMonth - emptyDate))
-      }
-      dateList[ week ].push( newDate )
-    } else if ( dateList[ week ] !== undefined ){
-      dateList[ week ].push( newDate )
+  const daysOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
+  dateList.push(Array(7).fill(null))
+
+  // fill current date
+  let currentWeek = 0
+  for (let i = 0; i < daysOfMonth; i++) {
+    let dt = new Date(date.getFullYear(), date.getMonth(), i + 1)
+
+    if (dateList[ currentWeek ] !== undefined) {
+      dateList[ currentWeek ][ dt.getDay() ] = dt
     }
 
-    if ( dateList[ week ].length === 7 ) {
-      week++
+    if (dt.getDay() === 6 && i < (daysOfMonth - 1)) {
+      dateList.push(Array(7).fill(null))
+      currentWeek++
     }
   }
+  
+  // check how many null in first week
+  let firstWeekNulls = []
+  let lastWeekNulls = []
 
-  dateList.map(( d, i) => {
-    if (d.length === 0) {
-      dateList.splice( i, 1)
+  dateList[0].map((d, i) => {
+    if (d === null) {
+      firstWeekNulls.push(i)
     }
   })
 
-  let nextMonthDates = []
-  if ( dateList[ dateList.length - 1 ].length !== 7 ) {
-    for (let i = 0; i < (7 - dateList[ dateList.length - 1 ].length) ; i++) {
-      let nextM = dt.getMonth() === 11 ? 0 : dt.getMonth() + 1
-      nextMonthDates.push(new Date(dt.getFullYear(), nextM, i + 1))
+  // fill first week nulls
+  let daysBefore = (new Date(date.getFullYear(), date.getMonth(), 0).getDate() - firstWeekNulls.length) + 1
+  firstWeekNulls.map(( id ) => {
+    dateList[0][id] = new Date(date.getFullYear(), date.getMonth() - 1, daysBefore)
+    daysBefore++
+  })
+
+  dateList[dateList.length - 1].map((d, i) => {
+    if (d === null) {
+      lastWeekNulls.push(i)
     }
-  }
+  })
+  // fill last week nulls
+  let daysAfter = 1
+  lastWeekNulls.map(( id ) => {
+    dateList[dateList.length - 1][id] = new Date(date.getFullYear(), date.getMonth() + 1, daysAfter)
+    daysAfter++
+  })
+  render()
+}
 
-  dateList[ dateList.length - 1 ] = dateList[ dateList.length - 1 ].concat(nextMonthDates)
+const render = function () {
+  let hijriCurrentMonth = []
+  let hijriCurrentYear = []
+  
+  dateList.map(( week, i ) => {
+    let weekElem = document.createElement('div')
+    weekElem.className = 'week'
+    weekElem.id = `week-${i}`
+    
+    week.map(( date, i ) => {
+      let newDate = new Date(date)
+      let boxElem = document.createElement('div')
+      boxElem.className = 'box'
 
-  dateList.map(( week, weekIndex) => {
-    let newWeek = document.createElement('div')
-    newWeek.id = `week${weekIndex+1}`
-    newWeek.className = 'week'
+      const hijriDateElem = document.createElement('span')
+      const gregDateElem = document.createElement('span')
 
-    week.map(( date, dateIndex) => {
-      let currentDate = new Date(date)
-      let newDate = document.createElement('div')
-      newDate.id = `date${ dateIndex + 1 }`
-      newDate.className = 'box'
-      if (dateIndex === 6) {
-        newDate.className = `${ newDate.className } sunday`
+      // hijri
+      hijriDateElem.className = 'hijri'
+      let hijriFullDate = HijriJS.toHijri(`${ newDate.getDate() }/${ newDate.getMonth() + 1 }/${ newDate.getFullYear() }`)
+      let hijriDate = Number(String(hijriFullDate).split('/')[0])
+      let hijriMonth = hijriMonthName[Number(String(hijriFullDate).split('/')[1]) - 1]
+      let hijriYear = String(hijriFullDate).split('/')[2].replace('H', '')
+
+      // add hijri month
+      if (hijriCurrentMonth.indexOf(hijriMonth) === -1) {
+        hijriCurrentMonth.push(hijriMonth)
       }
-      if (dt.getMonth() !== currentDate.getMonth()) {
-        newDate.className = `${ newDate.className } off`
-      }
-      newDate.innerText = date === null ? '' : currentDate.getDate()
 
-      newWeek.appendChild( newDate )
+      // add hijri year
+      if (hijriCurrentYear.indexOf(hijriYear) === -1) {
+        hijriCurrentYear.push(hijriYear)
+      }
+
+      hijriDateElem.innerText = [...String(hijriDate).split('').map(( digit ) => arabNumber[digit])].join('')
+      boxElem.appendChild(hijriDateElem)
+
+      // greg
+      gregDateElem.className = 'gregorian'
+      gregDateElem.innerText = newDate.getDate()
+      boxElem.appendChild(gregDateElem)
+
+      // check if sunday
+      if (i === 0) {
+        boxElem.className = `${ boxElem.className } sunday`
+      } else if (i === 5) {
+        // if friday
+        boxElem.className = `${ boxElem.className } friday`
+      }
+
+      // check if same month
+      if ( currentDate.getMonth() !== newDate.getMonth() ) {
+        boxElem.className = `${ boxElem.className } off`
+      }
+
+      weekElem.appendChild(boxElem)
     })
 
-    calendarBody.appendChild( newWeek )
+    calendarBody.appendChild(weekElem)
   })
+
+  // change the header
+  gregHeader.innerText = `${monthName[ currentDate.getMonth() ]} ${currentDate.getFullYear()}`
+  hijriHeader.innerText = `${hijriCurrentMonth.join(' / ')} ${hijriCurrentYear.join(' / ')}`
 }
