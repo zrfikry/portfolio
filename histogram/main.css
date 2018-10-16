@@ -2,27 +2,10 @@ body {
   font-family: 'Courier New', Courier, monospace;
 }
 
-#display-box {
-  display: flex;
-  flex-direction: column;
-  max-width: 300px;
-}
-
 #display-box > input {
   padding: .5rem;
   border: 1px solid #ddd;
   border-radius: .5rem;
-}
-
-#display-box > #imageBox {
-  text-align: center;
-  border: 1px solid #ddd;
-  border-radius: .5rem;
-  margin: 1rem 0;
-}
-
-#icon {
-  display: none;
 }
 
 #histogram {

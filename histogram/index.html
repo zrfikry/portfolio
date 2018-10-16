@@ -11,12 +11,13 @@
 <body>
   <div id="display-box">
     <h1>Histogram</h1>
-    <input type="file" id="fileInput" onchange="decodeFile(event)">
+    <input type="file" id="fileInput" onchange="decodeFile(event)" accept="image/*">
     <img src="" alt="" id="icon">
-    <div id="imageBox" class="imageBox"></div>
-    <div id="imageBoxGrayscale" class="imageBox"></div>
+    <div id="imageBox"></div>
     <small>*best with Google Chrome</small>
+    <small>*the grayscale image was created by modifying image data of the canvas</small>
   </div>
+  <button onclick="renderHistogram()">Render Histogram</button>
   <div id="histogram"></div>
 </body>
 </html>

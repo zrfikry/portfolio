@@ -36,7 +36,6 @@ class ImageProcessor {
       let red = data[i] // R
       let green = data[i+1] // G
       let blue = data[i+2] // B
-      // data[i+3] is for alpha
 
       color.red.push( red )
       color.green.push( green )
@@ -49,8 +48,8 @@ class ImageProcessor {
   toGrayscale () {
     const { width, height } = this.image
     const ctx = this.getContext()
-    const data = ctx.getImageData(0, 0, width, height).data
-    const grayscale = ctx.getImageData(0, 0, width, height)
+    let imageData = ctx.getImageData(0, 0, width, height)
+    const data = imageData.data
 
     for (let i = 0; i < data.length; i += 4) {
       let red = data[i] // R
@@ -59,16 +58,16 @@ class ImageProcessor {
       let alpha = data[i+3] // Alpha
 
       let average = ( red+green+blue ) / 3
-      grayscale.data[i] = average
-      grayscale.data[i+1] = average
-      grayscale.data[i+2] = average
-      grayscale.data[i+3] = alpha
+      imageData.data[i] = average
+      imageData.data[i+1] = average
+      imageData.data[i+2] = average
+      imageData.data[i+3] = alpha
     }
 
     let newCanvas = document.createElement('canvas')
     newCanvas.width = width
     newCanvas.height = height
-    newCanvas.getContext('2d').putImageData(grayscale, 0,0)
+    newCanvas.getContext('2d').putImageData(imageData, 0,0)
     
     return newCanvas
   }
@@ -90,18 +89,23 @@ function decodeFile(event) {
 }
 
 document.body.onload = render
+let canvas = null
+const iconElem = document.createElement('img')
 
 async function render() {
   imageBox.innerHTML = ""
   histogramElem.innerHTML = ""
-  
-  const iconElem = document.createElement('img')
   iconElem.src = base64
-  const canvas = await new ImageProcessor(iconElem)
+  canvas = await new ImageProcessor(iconElem)
   imageBox.appendChild( canvas.toCanvas() )
   imageBox.appendChild( canvas.toGrayscale() )
-  const colors = canvas.createHistogram()
+}
 
+function renderHistogram () {
+  histogramElem.innerHTML = ""
+  iconElem.src = base64
+  canvas = new ImageProcessor(iconElem)
+  const colors = canvas.createHistogram()
   const indicators = [ 0, 50, 100, 150, 200, 255 ]
 
   Object.keys( colors ).map(( color ) => {
