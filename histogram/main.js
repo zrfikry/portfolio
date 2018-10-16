@@ -95,6 +95,7 @@ const iconElem = document.createElement('img')
 async function render() {
   imageBox.innerHTML = ""
   histogramElem.innerHTML = ""
+
   iconElem.src = base64
   canvas = await new ImageProcessor(iconElem)
   imageBox.appendChild( canvas.toCanvas() )
@@ -103,6 +104,7 @@ async function render() {
 
 function renderHistogram () {
   histogramElem.innerHTML = ""
+
   iconElem.src = base64
   canvas = new ImageProcessor(iconElem)
   const colors = canvas.createHistogram()

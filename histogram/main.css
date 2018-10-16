@@ -8,6 +8,10 @@ body {
   border-radius: .5rem;
 }
 
+#display-box > #imageBox {
+  margin: 1rem 0;
+}
+
 #histogram {
   display: flex;
   flex-direction: column;
