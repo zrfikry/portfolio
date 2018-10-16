@@ -77,8 +77,8 @@ function decodeFile(event) {
   const file = event.target.files[0]
   let reader = new FileReader()
 
-  reader.addEventListener('load', () => {
-    const result = reader.result
+  reader.addEventListener('load', async () => {
+    const result = await reader.result
     base64 = result
     render()
   })
