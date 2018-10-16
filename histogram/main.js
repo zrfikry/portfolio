@@ -1,6 +1,5 @@
 let base64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAclBMVEX///8aGBjvZTiVaVvraD0nJSUgHh6VlJTj4+Nta2urbFhJQkBubGzv7+9nVlH5+fk6OTkgGhnmYjfcakZZLyJRT0+qqaltNiUmHRqpTC5EJx49JR26UjA0IRzpYzfbXTVgMSJRLCB7OyahSS2LQCnAUzDs2XjFAAABJElEQVQ4jb1T2baDMAgUEq1RazVuXbXr//9iwaQarT0+3cuDRhgZGIjn/atta1VlWZXU28VwqAKwFqjwO74Zwj1kMwvvFLv9VESRSH0+q90EwHFfSOxNCoaoSX5yxAUOVsTkcFhC4o8lOiYJEYQugV9097M20fZ87wpiSYb+KYHAB0B+e2r9vOUADxSU4qNHTQkkHo5cvNb8PB5QUop6ZEgp84siJWJJrxd9piNHxQyI+gKnlio4wYWLIY7KAjKAiIvTpkr7igCyGWBqDsBS8M/Nft/YZh0KWyRZwy005pyOaps2WaGcAXnba+m0aYSaAVyhjNTsvTLg2o/LlXocVkcqld33sJxxa7007vWFWV+51aXlSpNx7ZOFtfeGi6N+XJw/szeSVw7/2RazTgAAAABJRU5ErkJggg=='
 const imageBox = document.getElementById('imageBox')
-const canvasElem = document.getElementById('my-canvas')
 const histogramElem = document.getElementById('histogram')
 
 class ImageProcessor {
@@ -11,17 +10,20 @@ class ImageProcessor {
   toCanvas () {
     const { image } = this
     const canvas = document.createElement('canvas')
-    canvas.id = 'my-canvas'
     canvas.width = image.width
     canvas.height = image.height
     canvas.getContext('2d').drawImage(image, 0, 0)
     return canvas
   }
 
+  getContext () {
+    const canvas = this.toCanvas()
+    return canvas.getContext('2d')
+  }
+
   createHistogram () {
     const { width, height } = this.image
-    const canvas = this.toCanvas()
-    const ctx = canvas.getContext('2d')
+    const ctx = this.getContext()
     const data = ctx.getImageData(0, 0, width, height).data
 
     let color = {
@@ -43,6 +45,33 @@ class ImageProcessor {
 
     return color
   }
+
+  toGrayscale () {
+    const { width, height } = this.image
+    const ctx = this.getContext()
+    const data = ctx.getImageData(0, 0, width, height).data
+    const grayscale = ctx.getImageData(0, 0, width, height)
+
+    for (let i = 0; i < data.length; i += 4) {
+      let red = data[i] // R
+      let green = data[i+1] // G
+      let blue = data[i+2] // B
+      let alpha = data[i+3] // Alpha
+
+      let average = ( red+green+blue ) / 3
+      grayscale.data[i] = average
+      grayscale.data[i+1] = average
+      grayscale.data[i+2] = average
+      grayscale.data[i+3] = alpha
+    }
+
+    let newCanvas = document.createElement('canvas')
+    newCanvas.width = width
+    newCanvas.height = height
+    newCanvas.getContext('2d').putImageData(grayscale, 0,0)
+    
+    return newCanvas
+  }
 }
 
 function decodeFile(event) {
@@ -60,7 +89,7 @@ function decodeFile(event) {
   }
 }
 
-document.body.onload = render()
+document.body.onload = render
 
 async function render() {
   imageBox.innerHTML = ""
@@ -70,6 +99,7 @@ async function render() {
   iconElem.src = base64
   const canvas = await new ImageProcessor(iconElem)
   imageBox.appendChild( canvas.toCanvas() )
+  imageBox.appendChild( canvas.toGrayscale() )
   const colors = canvas.createHistogram()
 
   const indicators = [ 0, 50, 100, 150, 200, 255 ]
