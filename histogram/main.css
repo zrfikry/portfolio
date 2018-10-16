@@ -1,0 +1,71 @@
+body {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+#display-box {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+}
+
+#display-box > input {
+  padding: .5rem;
+  border: 1px solid #ddd;
+  border-radius: .5rem;
+}
+
+#display-box > #imageBox {
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: .5rem;
+  margin: 1rem 0;
+}
+
+#icon {
+  display: none;
+}
+
+#histogram {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.histogram {
+  display: inline-flex;
+  position: relative;
+  height: 255px;
+  width: fit-content;
+  transform: rotate(180deg);
+  flex-direction: row-reverse;
+  margin: 1rem 0;
+  padding: 0 0 1rem 2rem;
+  border-right: 2px solid;
+  border-top: 2px solid;
+}
+
+.histogram > .indicator {
+  position: absolute;
+  transform: rotate(180deg);
+  width: 100%;
+  border-bottom: 1px dashed;
+}
+
+.histogram > .indicator > i {
+  position: sticky;
+  font-style: normal;
+  left: 0;
+  font-weight: 600;
+  background: rgba(255,255,255, .56);
+  padding: 2px;
+}
+
+.pixel {
+  /* margin: 0 1px; */
+  display: flex;
+}
+
+.pixel > span {
+  width: 2px;
+  display: inline-block;
+}
