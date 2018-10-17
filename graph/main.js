@@ -1,7 +1,6 @@
 let nodes = 0
 let edges = 0
-let nodeList = []
-// const ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+let graph = null
 
 const nodeInput = document.getElementById('nodeInput')
 const edgeInput = document.getElementById('edgeInput')
@@ -11,16 +10,71 @@ const routeForm = document.getElementById('routeForm')
 const whereTo = document.getElementById('whereTo')
 const resultElem = document.getElementById('result')
 
-class Node {
-  constructor (name = '') {
-    this.name = name
-    this.child = []
+class Graph {
+  constructor(nodes) { 
+    this.nodes = nodes
+    this.nodeList = new Map()
+    this.result = []
   }
 
-  addChild ( node ) {
-    this.child.push( node )
+  clearResult () {
+    this.result = []
   }
-}
+
+  addNodes(value) {
+    this.nodeList.set(value, [])
+  } 
+
+  addEdge(from, to) {
+    this.nodeList.get(from).push(to)
+    this.nodeList.get(to).push(from)
+  }
+
+  printGraph() {
+    let keys = this.nodeList.keys()
+    for (var i of keys) {
+      console.log( `${ i } → ${ this.nodeList.get(i).join(', ') }` )
+    }
+  }
+
+  try () {
+    for (let i = 0; i < this.nodes; i++) {
+      this.addNodes(String.fromCharCode( 65 + i ))
+    }
+    this.addEdge('A', 'B')
+    this.addEdge('A', 'D')
+    this.addEdge('A', 'C')
+    this.addEdge('B', 'F')
+    this.addEdge('C', 'F')
+    this.addEdge('C', 'E')
+    this.addEdge('B', 'D')
+
+    this.printGraph()
+    this.dfs('A', 'F')
+    return this.result
+  }
+
+  dfs (from, to) {
+    this.dfsChecker (from, to, [])
+  }
+
+  dfsChecker (from, to, visited) {
+    let tempVisited = [...visited]
+    tempVisited.push( from )
+    if (from === to) {
+      let result = tempVisited.map(node => node)
+      this.result.push( result.join(' → ') )
+    }
+  
+    let neighbors = this.nodeList.get(from)
+    for (let i in neighbors) { 
+      let id = neighbors[i]
+      if (!tempVisited.includes(id)) {
+        this.dfsChecker (id, to, tempVisited) 
+      }
+    } 
+  }
+} 
 
 initForm.addEventListener('submit', (event) => {
   event.preventDefault()
@@ -53,14 +107,12 @@ const showRoutesForm = () => {
   }
 }
 
-routeForm.addEventListener('submit', createRoutes)
-
-function createRoutes (event) {
+routeForm.addEventListener('submit', (event) => {
   event.preventDefault()
-  nodeList = []
-
+  graph = new Graph( nodes )
+  
   for (let i = 0; i < nodes; i++) {
-    nodeList.push( new Node( String.fromCharCode(65 + i) ) )
+    graph.addNodes(String.fromCharCode( 65 + i ))
   }
 
   const routes = document.querySelectorAll('input[name="edge[]"]')
@@ -68,51 +120,18 @@ function createRoutes (event) {
     const val = obj.value.split('-')
     const from = String( val[0] ).toUpperCase()
     const to = String( val[1] ).toUpperCase()
-    const id = nodeList.findIndex(( n ) => n.name === from)
-    nodeList[ id ].addChild( to )
+    graph.addEdge(from, to)
   })
 
   whereTo.style.display = 'block'
-}
+})
 
-whereTo.addEventListener('submit', findRoute)
-
-function findRoute (event) {
+whereTo.addEventListener('submit', (event) => {
   event.preventDefault()
+  graph.clearResult()
   const fromInput = String( document.getElementById('fromInput').value ).toUpperCase()
   const toInput = String( document.getElementById('toInput').value ).toUpperCase()
-
-  let queue = [ fromInput ]
-  let result = []
   
-  while ( result.indexOf( toInput ) === -1 ) {
-    let shifted = queue.shift()
-    let id = nodeList.findIndex(( n ) => n.name === shifted)
-    let node = nodeList[ id ]
-    result.push( shifted )
-    node.child.map(( child ) => {
-      if ( child !== toInput) {
-        queue.push( child )
-      } else {
-        result.push( child )
-      }
-    })
-  }
-
-  resultElem.innerText = `Result : ${ result.join(' -> ') }`
-
-  // result = []
-  // while ( queue.length > 0 ) {
-  //   let shifted = queue.shift()
-  //   result.push( shifted )
-  //   let id = nodeList.findIndex(( n ) => n.name === shifted)
-  //   nodeList[ id ].child.forEach(( child ) => {
-  //     let childId = nodeList.findIndex(( n ) => n.name === child)
-  //     if ( nodeList[ childId ].visited === false ) {
-  //       nodeList[ childId ].visit()
-  //       queue.push( nodeList[ childId ].name )
-  //     }
-  //   })
-  // }
-
-}
+  graph.dfs(fromInput, toInput)
+  resultElem.innerText = `Result : \n ${ graph.result.join('\n') }`
+})
