@@ -81,17 +81,15 @@ function findRoute (event) {
   event.preventDefault()
   const fromInput = String( document.getElementById('fromInput').value ).toUpperCase()
   const toInput = String( document.getElementById('toInput').value ).toUpperCase()
-  
+
   let queue = [ fromInput ]
   let result = []
   
   while ( result.indexOf( toInput ) === -1 ) {
-    console.log(queue)
     let id = nodeList.findIndex(( n ) => n.name === queue[0])
     let node = nodeList[ id ]
     result.push( queue[0] )
     queue.shift()
-
     node.child.map(( child ) => {
       if ( child !== toInput) {
         queue.push( child )
@@ -102,4 +100,19 @@ function findRoute (event) {
   }
 
   resultElem.innerText = `Result : ${ result.join(' -> ') }`
+
+  // result = []
+  // while ( queue.length > 0 ) {
+  //   let shifted = queue.shift()
+  //   result.push( shifted )
+  //   let id = nodeList.findIndex(( n ) => n.name === shifted)
+  //   nodeList[ id ].child.forEach(( child ) => {
+  //     let childId = nodeList.findIndex(( n ) => n.name === child)
+  //     if ( nodeList[ childId ].visited === false ) {
+  //       nodeList[ childId ].visit()
+  //       queue.push( nodeList[ childId ].name )
+  //     }
+  //   })
+  // }
+
 }
