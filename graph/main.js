@@ -32,9 +32,30 @@ class Graph {
 
   printGraph() {
     let keys = this.nodeList.keys()
-    for (var i of keys) {
+    for (let i of keys) {
       console.log( `${ i } → ${ this.nodeList.get(i).join(', ') }` )
     }
+  }
+
+  dfs (from, to) {
+    this.dfsChecker (from, to, [])
+  }
+
+  dfsChecker (from, to, visited) {
+    visited = [...visited ]
+    visited.push( from )
+    if (from === to) {
+      let trails = visited.map( node => node )
+      this.result.push( trails.join(' → ') )
+    }
+  
+    let neighbors = this.nodeList.get( from )
+    for (let i in neighbors) {
+      let id = neighbors[i]
+      if (visited.includes( id ) === false) {
+        this.dfsChecker (id, to, visited) 
+      }
+    } 
   }
 
   try () {
@@ -52,27 +73,6 @@ class Graph {
     this.printGraph()
     this.dfs('A', 'F')
     return this.result
-  }
-
-  dfs (from, to) {
-    this.dfsChecker (from, to, [])
-  }
-
-  dfsChecker (from, to, visited) {
-    let tempVisited = [...visited]
-    tempVisited.push( from )
-    if (from === to) {
-      let result = tempVisited.map(node => node)
-      this.result.push( result.join(' → ') )
-    }
-  
-    let neighbors = this.nodeList.get(from)
-    for (let i in neighbors) { 
-      let id = neighbors[i]
-      if (!tempVisited.includes(id)) {
-        this.dfsChecker (id, to, tempVisited) 
-      }
-    } 
   }
 } 
 
@@ -98,7 +98,7 @@ const showRoutesForm = () => {
     newInput.name = 'edge[]'
     newInput.id = `edge-${i}`
     newInput.required = true
-    newInput.pattern = '[A-Z]-[A-Z]'
+    newInput.pattern = '[a-zA-Z]-[a-zA-Z]'
 
     newWrap.appendChild( newLabel )
     newWrap.appendChild( newInput )
@@ -133,5 +133,6 @@ whereTo.addEventListener('submit', (event) => {
   const toInput = String( document.getElementById('toInput').value ).toUpperCase()
   
   graph.dfs(fromInput, toInput)
+  graph.printGraph()
   resultElem.innerText = `Result : \n ${ graph.result.join('\n') }`
 })
