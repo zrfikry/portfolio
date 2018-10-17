@@ -86,10 +86,10 @@ function findRoute (event) {
   let result = []
   
   while ( result.indexOf( toInput ) === -1 ) {
-    let id = nodeList.findIndex(( n ) => n.name === queue[0])
+    let shifted = queue.shift()
+    let id = nodeList.findIndex(( n ) => n.name === shifted)
     let node = nodeList[ id ]
-    result.push( queue[0] )
-    queue.shift()
+    result.push( shifted )
     node.child.map(( child ) => {
       if ( child !== toInput) {
         queue.push( child )
