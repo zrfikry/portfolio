@@ -1,13 +1,12 @@
 let nodes = 0
 let edges = 0
 let nodeList = []
-const ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+// const ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
 const nodeInput = document.getElementById('nodeInput')
 const edgeInput = document.getElementById('edgeInput')
 
-const nodeForm = document.getElementById('nodeForm')
-const edgeForm = document.getElementById('edgeForm')
+const initForm = document.getElementById('initForm')
 const routeForm = document.getElementById('routeForm')
 const whereTo = document.getElementById('whereTo')
 const resultElem = document.getElementById('result')
@@ -23,17 +22,9 @@ class Node {
   }
 }
 
-nodeForm.addEventListener('submit', (event) => {
+initForm.addEventListener('submit', (event) => {
   event.preventDefault()
   nodes = Number(nodeInput.value)
-
-  for (let i = 0; i < nodes; i++) {
-    nodeList.push( new Node(ALPHABET[i]) )
-  }
-})
-
-edgeForm.addEventListener('submit', (event) => {
-  event.preventDefault()
   edges = Number(edgeInput.value)
   showRoutesForm()
 })
@@ -44,13 +35,16 @@ const showRoutesForm = () => {
   inputsElem.innerHTML = ''
   for (let i = 0; i < edges; i++) {
     let newWrap = document.createElement('div')
+    newWrap.className = 'group'
 
     let newLabel = document.createElement('label')
-    newLabel.innerText = i + 1
+    newLabel.innerText = `Edge ${ i + 1 }`
 
     let newInput = document.createElement('input')
     newInput.name = 'edge[]'
+    newInput.id = `edge-${i}`
     newInput.required = true
+    newInput.pattern = '[A-Z]-[A-Z]'
 
     newWrap.appendChild( newLabel )
     newWrap.appendChild( newInput )
@@ -63,6 +57,11 @@ routeForm.addEventListener('submit', createRoutes)
 
 function createRoutes (event) {
   event.preventDefault()
+  nodeList = []
+
+  for (let i = 0; i < nodes; i++) {
+    nodeList.push( new Node( String.fromCharCode(65 + i) ) )
+  }
 
   const routes = document.querySelectorAll('input[name="edge[]"]')
   routes.forEach(( obj ) => {
@@ -95,7 +94,7 @@ function findRoute (event) {
     queue.shift()
 
     node.child.map(( child ) => {
-      if ( child !== toInput ) {
+      if ( child !== toInput) {
         queue.push( child )
       } else {
         result.push( child )

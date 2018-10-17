@@ -9,28 +9,33 @@
   <script src="main.js" defer></script>
 </head>
 <body>
-  <form id="nodeForm">
-    <label for="">Node</label>
-    <input type="number" id="nodeInput">
-    <button>Set Node</button>
+  <form id="initForm">
+    <header>Init</header>
+    <div class="group">
+      <label for="">Node</label>
+      <input type="number" id="nodeInput">
+    </div>
+
+    <div class="group">
+      <label for="">Edge</label>
+      <input type="number" id="edgeInput">
+    </div>
+    <button>Set Node & Edge</button>
   </form>
-  <form id="edgeForm">
-    <label for="">Edge</label>
-    <input type="number" id="edgeInput">
-    <button>Set Edge</button>
-  </form>
+
   <form id="routeForm">
-    Routes
+    <header>Routes</header>
     <div id="inputs"></div>
     <button>Set Routes</button>
   </form>
+
   <form id="whereTo">
-    My Trip
-    <div>
+    <header>My Trip</header>
+    <div class="group">
       <label for="">From</label>
       <input type="text" id="fromInput">
     </div>
-    <div>
+    <div class="group">
       <label for="">To</label>
       <input type="text" id="toInput">
     </div>
@@ -38,7 +43,7 @@
   </form>
 
   <div id="result">
-    
+
   </div>
 </body>
 </html>
