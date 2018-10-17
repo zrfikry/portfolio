@@ -1,0 +1,15 @@
+body {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+#routeForm {
+  display: none;
+}
+
+#whereTo {
+  display: none;
+}
+
+#result {
+  font-size: 2rem;
+}
