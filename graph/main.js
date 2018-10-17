@@ -81,9 +81,8 @@ function findRoute (event) {
   event.preventDefault()
   const fromInput = String( document.getElementById('fromInput').value ).toUpperCase()
   const toInput = String( document.getElementById('toInput').value ).toUpperCase()
-
-  let startingNode = nodeList[ nodeList.findIndex(( n ) => n.name === fromInput) ]
-  let queue = [ startingNode.name ]
+  
+  let queue = [ fromInput ]
   let result = []
   
   while ( result.indexOf( toInput ) === -1 ) {
