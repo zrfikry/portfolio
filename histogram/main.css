@@ -22,13 +22,14 @@ body {
   display: inline-flex;
   position: relative;
   height: 255px;
-  width: fit-content;
   transform: rotate(180deg);
   flex-direction: row-reverse;
   margin: 1rem 0;
   padding: 0 0 1rem 2rem;
   border-right: 2px solid;
   border-top: 2px solid;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 .histogram > .indicator {

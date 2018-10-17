@@ -92,50 +92,54 @@ document.body.onload = render
 let canvas = null
 const iconElem = document.createElement('img')
 
-async function render() {
+function render() {
   imageBox.innerHTML = ""
   histogramElem.innerHTML = ""
 
   iconElem.src = base64
-  canvas = await new ImageProcessor(iconElem)
-  imageBox.appendChild( canvas.toCanvas() )
-  imageBox.appendChild( canvas.toGrayscale() )
+  iconElem.onload = () => {
+    canvas = new ImageProcessor(iconElem)
+    imageBox.appendChild( canvas.toCanvas() )
+    imageBox.appendChild( canvas.toGrayscale() )
+  }
 }
 
 function renderHistogram () {
   histogramElem.innerHTML = ""
 
   iconElem.src = base64
-  canvas = new ImageProcessor(iconElem)
-  const colors = canvas.createHistogram()
-  const indicators = [ 0, 50, 100, 150, 200, 255 ]
+  iconElem.onload = () => {
+    canvas = new ImageProcessor(iconElem)
+    const colors = canvas.createHistogram()
+    const indicators = [ 0, 50, 100, 150, 200, 255 ]
 
-  Object.keys( colors ).map(( color ) => {
-    let newGraph = document.createElement('div')
-    newGraph.className = 'histogram'
+    Object.keys( colors ).map(( color ) => {
+      let newGraph = document.createElement('div')
+      newGraph.className = 'histogram'
 
-    indicators.map(( val ) => {
-      let newIndicator = document.createElement('span')
-      newIndicator.className = 'indicator'
-      newIndicator.style.top = `${ val }px`
-      newIndicator.innerHTML = `<i>${ val }</i>`
+      indicators.map(( val ) => {
+        let newIndicator = document.createElement('span')
+        newIndicator.className = 'indicator'
+        newIndicator.style.top = `${ val }px`
+        newIndicator.innerHTML = `<i>${ val }</i>`
 
-      newGraph.appendChild( newIndicator )
+        newGraph.appendChild( newIndicator )
+      })
+
+      colors[ color ].map(( pixel, i) => {
+        let newPixel = document.createElement('div')
+        newPixel.className = 'pixel'
+        newPixel.id = `${ color }-${i}`
+
+        let newColor = document.createElement('span')
+        newColor.style.height = `${pixel}px`
+        newColor.style.background = color
+        newPixel.appendChild( newColor )
+
+        newGraph.appendChild( newPixel )
+      })
+
+      histogramElem.appendChild( newGraph )
     })
-
-    colors[ color ].map(( pixel, i) => {
-      let newPixel = document.createElement('div')
-      newPixel.className = 'pixel'
-      newPixel.id = `${ color }-${i}`
-
-      let newColor = document.createElement('span')
-      newColor.style.height = `${pixel}px`
-      newColor.style.background = color
-      newPixel.appendChild( newColor )
-
-      newGraph.appendChild( newPixel )
-    })
-
-    histogramElem.appendChild( newGraph )
-  })
+  }
 }
