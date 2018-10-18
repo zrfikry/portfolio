@@ -42,18 +42,18 @@ class Graph {
   }
 
   dfsChecker (from, to, visited) {
-    visited = [...visited ]
-    visited.push( from )
+    let visited_temp = [...visited ]
+    visited_temp.push( from )
     if (from === to) {
-      let trails = visited.map( node => node )
+      let trails = visited_temp.map( node => node )
       this.result.push( trails.join(' → ') )
     }
   
     let neighbors = this.nodeList.get( from )
     for (let i in neighbors) {
       let id = neighbors[i]
-      if (visited.includes( id ) === false) {
-        this.dfsChecker (id, to, visited) 
+      if (visited_temp.includes( id ) === false) {
+        this.dfsChecker (id, to, visited_temp) 
       }
     } 
   }
