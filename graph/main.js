@@ -12,8 +12,7 @@ const resultArea = document.getElementById('resultArea')
 const resultElem = document.getElementById('result')
 
 class Graph {
-  constructor(nodes) { 
-    this.nodes = nodes
+  constructor() {
     this.nodeList = new Map()
     this.result = []
   }
@@ -117,7 +116,7 @@ class Graph {
   }
 
   try () {
-    for (let i = 0; i < this.nodes; i++) {
+    for (let i = 0; i < 6; i++) {
       this.addNodes(String.fromCharCode( 65 + i ))
     }
     this.addEdge('A', 'B', 2)
@@ -168,7 +167,7 @@ const showEdgeForm = () => {
 
 edgeForm.addEventListener('submit', (event) => {
   event.preventDefault()
-  graph = new Graph( nodes )
+  graph = new Graph()
   
   for (let i = 0; i < nodes; i++) {
     graph.addNodes(String.fromCharCode( 65 + i ))
