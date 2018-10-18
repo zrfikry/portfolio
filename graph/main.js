@@ -50,7 +50,7 @@ class Graph {
     let color = d3.scaleOrdinal(d3.schemeCategory20);
 
     let simulation = d3.forceSimulation()
-      .force("link", d3.forceLink().id(function(d) { return d.id }))
+      .force("link", d3.forceLink().id( (d) => d.id ))
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(width / 2, height / 2))
 
@@ -67,39 +67,29 @@ class Graph {
       .data(nodes)
       .enter().append("g")
       
-    let circles = node.append("circle")
-        .attr("r", 5)
-        .attr("fill", function(d) { return color(1) })
+    node.append("circle")
+      .attr("r", 5)
+      .attr("fill", () => color(1) )
   
-    let lables = node.append("text")
-        .text(function(d) {
-          return d.id
-        })
-        .attr('x', 6)
-        .attr('y', 3)
+    node.append("text")
+      .text((d) => d.id)
+      .attr('x', 6)
+      .attr('y', 3)
+
+    node.append("title").text( (d) => d.id )
   
-    node.append("title")
-        .text(function(d) { return d.id })
-  
-    simulation
-        .nodes(nodes)
-        .on("tick", ticked)
+    simulation.nodes(nodes)
+      .on("tick", () => {
+        link.attr("x1", (d) => d.source.x )
+          .attr("y1", (d) => d.source.y )
+          .attr("x2", (d) => d.target.x )
+          .attr("y2", (d) => d.target.y )
+    
+        node.attr("transform", (d) => "translate(" + d.x + "," + d.y + ")" )
+      })
   
     simulation.force("link")
         .links(edges)
-  
-    function ticked() {
-      link
-        .attr("x1", function(d) { return d.source.x })
-        .attr("y1", function(d) { return d.source.y })
-        .attr("x2", function(d) { return d.target.x })
-        .attr("y2", function(d) { return d.target.y })
-  
-      node
-        .attr("transform", function(d) {
-          return "translate(" + d.x + "," + d.y + ")"
-        })
-    }
   }
 
   dfs (from, to) {
