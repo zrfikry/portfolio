@@ -32,9 +32,73 @@ class Graph {
   }
 
   printGraph() {
-    let keys = this.nodeList.keys()
-    for (let i of keys) {
+    for (let i of this.nodeList.keys()) {
       console.log( `${ i } → ${ this.nodeList.get(i).join(', ') }` )
+    }
+  }
+
+  drawGraph( edges ) {
+    let nodes = []
+    for (let i of this.nodeList.keys()) {
+      nodes.push( { id: i } )
+    }
+    const svg = d3.select("svg")
+    const width = +svg.attr("width")
+    const height = +svg.attr("height")
+    svg.html('')
+
+    let color = d3.scaleOrdinal(d3.schemeCategory20);
+
+    let simulation = d3.forceSimulation()
+      .force("link", d3.forceLink().id(function(d) { return d.id }))
+      .force("charge", d3.forceManyBody())
+      .force("center", d3.forceCenter(width / 2, height / 2))
+
+    let link = svg.append("g")
+      .attr("class", "links")
+      .selectAll("line")
+      .data(edges)
+      .enter().append("line")
+      .attr("stroke-width", 1)
+  
+    let node = svg.append("g")
+      .attr("class", "nodes")
+      .selectAll("g")
+      .data(nodes)
+      .enter().append("g")
+      
+    let circles = node.append("circle")
+        .attr("r", 5)
+        .attr("fill", function(d) { return color(1) })
+  
+    let lables = node.append("text")
+        .text(function(d) {
+          return d.id
+        })
+        .attr('x', 6)
+        .attr('y', 3)
+  
+    node.append("title")
+        .text(function(d) { return d.id })
+  
+    simulation
+        .nodes(nodes)
+        .on("tick", ticked)
+  
+    simulation.force("link")
+        .links(edges)
+  
+    function ticked() {
+      link
+        .attr("x1", function(d) { return d.source.x })
+        .attr("y1", function(d) { return d.source.y })
+        .attr("x2", function(d) { return d.target.x })
+        .attr("y2", function(d) { return d.target.y })
+  
+      node
+        .attr("transform", function(d) {
+          return "translate(" + d.x + "," + d.y + ")"
+        })
     }
   }
 
@@ -121,20 +185,23 @@ edgeForm.addEventListener('submit', (event) => {
   }
 
   const edges = document.querySelectorAll('input[name="edge[]"]')
+  let edgesList = []
   edges.forEach(( obj ) => {
     const val = obj.value.split('-')
     const from = String( val[0] ).toUpperCase()
     const to = String( val[1] ).toUpperCase()
     const cost = Number( val[2] )
+    edgesList.push({source: from, target: to, value: cost})
     graph.addEdge(from, to, cost)
   })
+  graph.drawGraph(edgesList)
 
   whereTo.style.display = 'block'
+  resultArea.style.display = 'block'
 })
 
 whereTo.addEventListener('submit', (event) => {
   event.preventDefault()
-  resultArea.style.display = 'block'
 
   graph.clearResult()
   const fromInput = String( document.getElementById('fromInput').value ).toUpperCase()
