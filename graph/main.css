@@ -1,5 +1,13 @@
 body {
   font-family: 'Courier New', Courier, monospace;
+  display: flex;
+}
+
+body > section#resultArea {
+  margin-left: 2rem;
+  border-left: 1px solid #ddd;
+  padding-left: 2rem;
+  display: none;
 }
 
 form {
@@ -27,7 +35,7 @@ form .group {
   width: 50%;
 }
 
-#routeForm {
+#edgeForm {
   display: none;
 }
 

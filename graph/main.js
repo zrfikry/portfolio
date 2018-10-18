@@ -6,8 +6,9 @@ const nodeInput = document.getElementById('nodeInput')
 const edgeInput = document.getElementById('edgeInput')
 
 const initForm = document.getElementById('initForm')
-const routeForm = document.getElementById('routeForm')
+const edgeForm = document.getElementById('edgeForm')
 const whereTo = document.getElementById('whereTo')
+const resultArea = document.getElementById('resultArea')
 const resultElem = document.getElementById('result')
 
 class Graph {
@@ -25,9 +26,9 @@ class Graph {
     this.nodeList.set(value, [])
   } 
 
-  addEdge(from, to) {
-    this.nodeList.get(from).push(to)
-    this.nodeList.get(to).push(from)
+  addEdge(from, to, cost) {
+    this.nodeList.get(from).push(`${to}-${cost}`)
+    this.nodeList.get(to).push(`${from}-${cost}`)
   }
 
   printGraph() {
@@ -38,22 +39,25 @@ class Graph {
   }
 
   dfs (from, to) {
-    this.dfsChecker (from, to, [])
+    this.dfsChecker (from, to, [], 0)
   }
 
-  dfsChecker (from, to, visited) {
-    let visited_temp = [...visited ]
-    visited_temp.push( from )
+  dfsChecker (from, to, visited, cost) {
+    let visited_temp = [...visited, from]
     if (from === to) {
-      let trails = visited_temp.map( node => node )
-      this.result.push( trails.join(' → ') )
+      let trails = visited_temp.map( node => node ).join(' → ')
+      trails += ` = ${ cost }`
+      this.result.push( trails )
+      return
     }
   
     let neighbors = this.nodeList.get( from )
     for (let i in neighbors) {
-      let id = neighbors[i]
+      const nbr = String( neighbors[i] ).split('-')
+      let id = nbr[0]
       if (visited_temp.includes( id ) === false) {
-        this.dfsChecker (id, to, visited_temp) 
+        let newCost = cost + Number( nbr[1] )
+        this.dfsChecker (id, to, visited_temp, newCost) 
       }
     } 
   }
@@ -62,13 +66,13 @@ class Graph {
     for (let i = 0; i < this.nodes; i++) {
       this.addNodes(String.fromCharCode( 65 + i ))
     }
-    this.addEdge('A', 'B')
-    this.addEdge('A', 'D')
-    this.addEdge('A', 'C')
-    this.addEdge('B', 'F')
-    this.addEdge('C', 'F')
-    this.addEdge('C', 'E')
-    this.addEdge('B', 'D')
+    this.addEdge('A', 'B', 2)
+    this.addEdge('A', 'D', 1)
+    this.addEdge('A', 'C', 3)
+    this.addEdge('B', 'F', 2)
+    this.addEdge('C', 'F', 1)
+    this.addEdge('C', 'E', 4)
+    this.addEdge('B', 'D', 1)
 
     this.printGraph()
     this.dfs('A', 'F')
@@ -80,11 +84,11 @@ initForm.addEventListener('submit', (event) => {
   event.preventDefault()
   nodes = Number(nodeInput.value)
   edges = Number(edgeInput.value)
-  showRoutesForm()
+  showEdgeForm()
 })
 
-const showRoutesForm = () => {
-  routeForm.style.display = 'block'
+const showEdgeForm = () => {
+  edgeForm.style.display = 'block'
   const inputsElem = document.getElementById('inputs')
   inputsElem.innerHTML = ''
   for (let i = 0; i < edges; i++) {
@@ -97,8 +101,9 @@ const showRoutesForm = () => {
     let newInput = document.createElement('input')
     newInput.name = 'edge[]'
     newInput.id = `edge-${i}`
+    newInput.placeholder = '[from]-[to]-[cost]'
     newInput.required = true
-    newInput.pattern = '[a-zA-Z]-[a-zA-Z]'
+    newInput.pattern = '[a-zA-Z]-[a-zA-Z]-[0-9]{1,}'
 
     newWrap.appendChild( newLabel )
     newWrap.appendChild( newInput )
@@ -107,7 +112,7 @@ const showRoutesForm = () => {
   }
 }
 
-routeForm.addEventListener('submit', (event) => {
+edgeForm.addEventListener('submit', (event) => {
   event.preventDefault()
   graph = new Graph( nodes )
   
@@ -115,12 +120,13 @@ routeForm.addEventListener('submit', (event) => {
     graph.addNodes(String.fromCharCode( 65 + i ))
   }
 
-  const routes = document.querySelectorAll('input[name="edge[]"]')
-  routes.forEach(( obj ) => {
+  const edges = document.querySelectorAll('input[name="edge[]"]')
+  edges.forEach(( obj ) => {
     const val = obj.value.split('-')
     const from = String( val[0] ).toUpperCase()
     const to = String( val[1] ).toUpperCase()
-    graph.addEdge(from, to)
+    const cost = Number( val[2] )
+    graph.addEdge(from, to, cost)
   })
 
   whereTo.style.display = 'block'
@@ -128,6 +134,8 @@ routeForm.addEventListener('submit', (event) => {
 
 whereTo.addEventListener('submit', (event) => {
   event.preventDefault()
+  resultArea.style.display = 'block'
+
   graph.clearResult()
   const fromInput = String( document.getElementById('fromInput').value ).toUpperCase()
   const toInput = String( document.getElementById('toInput').value ).toUpperCase()
