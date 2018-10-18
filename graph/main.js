@@ -46,7 +46,7 @@ class Graph {
     const height = +svg.attr("height")
     svg.html('')
 
-    let color = d3.scaleOrdinal(d3.schemeCategory20);
+    let color = d3.scaleOrdinal(d3.schemeCategory20)
 
     let simulation = d3.forceSimulation()
       .force("link", d3.forceLink().id( (d) => d.id ))
