@@ -115,7 +115,7 @@ class Graph {
     } 
   }
 
-  try () {
+  try (from = 'A', to = 'F') {
     for (let i = 0; i < 6; i++) {
       this.addNodes(String.fromCharCode( 65 + i ))
     }
@@ -128,7 +128,7 @@ class Graph {
     this.addEdge('B', 'D', 1)
 
     this.printGraph()
-    this.dfs('A', 'F')
+    this.dfs(from, to)
     return this.result
   }
 } 
